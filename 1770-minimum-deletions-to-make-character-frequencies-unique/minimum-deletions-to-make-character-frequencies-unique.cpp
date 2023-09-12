@@ -10,7 +10,7 @@ class Solution {
 
     for (int freq : count)
       while (freq > 0 && !usedFreq.insert(freq).second) {
-        --freq;  // Delete ('a' + i).
+        --freq;  
         ++ans;
       }
 
