@@ -2,13 +2,15 @@ class Solution {
  public:
   vector<int> sortJumbled(vector<int>& mapping, vector<int>& nums) {
     vector<int> ans;
-    map<int, vector<int>> mappedToOriginalNums;
+    vector<tuple<int, int, int>> A;  // (mapped, index, num)
 
-    for (const int num : nums)
-      mappedToOriginalNums[getMapped(num, mapping)].push_back(num);
+    for (int i = 0; i < nums.size(); ++i)
+      A.emplace_back(getMapped(nums[i], mapping), i, nums[i]);
 
-    for (const auto& [_, originalNums] : mappedToOriginalNums)
-      ans.insert(ans.end(), originalNums.begin(), originalNums.end());
+    ranges::sort(A);
+
+    for (const auto& [_, i, num] : A)
+      ans.push_back(num);
 
     return ans;
   }
