@@ -37,15 +37,7 @@ class Solution {
             {
                 if(temp.next.val==val)
                 {
-                    if(temp.next.next==null)
-                    {
-                        temp.next=null;
-                        break;
-                    }
-                    else
-                    {
-                        // temp.next=temp.next.next;
-                        ListNode y=temp.next;
+                    ListNode y=temp.next;
                         while(y!=null)
                         {
                             if(y.val==val)
@@ -56,7 +48,6 @@ class Solution {
                             break;
                             y=y.next;
                         }
-                    }
                 }
             }
             temp=temp.next;
