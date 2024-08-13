@@ -2,7 +2,7 @@ class Solution {
  public:
   vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
     vector<vector<int>> ans;
-    sort(candidates.begin(), candidates.end());
+    ranges::sort(candidates);
     dfs(candidates, 0, target, {}, ans);
     return ans;
   }
@@ -21,7 +21,7 @@ class Solution {
       if (i > s && A[i] == A[i - 1])
         continue;
       path.push_back(A[i]);
-      dfs(A, i + 1, target - A[i], move(path), ans);
+      dfs(A, i + 1, target - A[i], std::move(path), ans);
       path.pop_back();
     }
   }
