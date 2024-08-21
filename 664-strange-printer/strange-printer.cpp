@@ -1,21 +1,22 @@
 class Solution {
- public:
-  int strangePrinter(string s) {
-    if (s.empty())
-      return 0;
+public:
+    vector<vector<int>> dp;
+    int f(string &s, int i, int j) {
+        if(i > j) return 0;
+        else if(dp[i][j] != -1) return dp[i][j];
+        int ans = f(s, i, j - 1) + 1;
 
-    const int n = s.size();
-    
-    vector<vector<int>> dp(n, vector<int>(n, n));
+        for(int k = i; k < j; k++) {
+            if(s[k] == s[j]) {
+                ans = min(ans, f(s, i, k) + f(s, k + 1, j - 1));
+            }
+        }
 
-    for (int i = 0; i < n; ++i)
-      dp[i][i] = 1;
-
-    for (int j = 0; j < n; ++j)
-      for (int i = j; i >= 0; --i)
-        for (int k = i; k < j; ++k)
-          dp[i][j] = min(dp[i][j], dp[i][k] + dp[k + 1][j] - (s[k] == s[j]));
-
-    return dp[0][n - 1];
-  }
+        return dp[i][j] = ans;
+    }
+    int strangePrinter(string s) {
+        int n = s.size();
+        dp.resize(n + 1, vector<int>(n + 1, -1)); 
+        return f(s, 0, n - 1); 
+    }
 };
