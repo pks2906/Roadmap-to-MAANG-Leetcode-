@@ -1,47 +1,35 @@
 class Solution {
  public:
   string nearestPalindromic(string n) {
-    const auto& [prevPalindrome, nextPalindrome] = getPalindromes(n);
-    return abs(prevPalindrome - stol(n)) <= abs(nextPalindrome - stol(n))
-               ? to_string(prevPalindrome)
-               : to_string(nextPalindrome);
-  }
+   if(n.length()==1) return to_string(stoi(n)-1); //Special case for single digit numbers
+   
+   int digits=n.length();
+   vector<long>candidates;
+   candidates.push_back(pow(10,digits-1)-1);//Case 1
+   candidates.push_back(pow(10,digits)+1);//Case 2
 
- private:
-  // Returns the two closest palindromes to the given number.
-  pair<long, long> getPalindromes(const string& s) {
-    const long num = stol(s);
-    const int n = s.length();
-    pair<long, long> palindromes;
-    const string half = s.substr(0, (n + 1) / 2);
-    const string reversedHalf = reversed(half.substr(0, n / 2));
-    const long candidate = stol(half + reversedHalf);
-
-    if (candidate < num)
-      palindromes.first = candidate;
-    else {
-      const string prevHalf = to_string(stol(half) - 1);
-      const string reversedPrevHalf = reversed(prevHalf.substr(0, n / 2));
-      if (n % 2 == 0 && stol(prevHalf) == 0)
-        palindromes.first = 9;
-      else if (n % 2 == 0 && prevHalf == "9")
-        palindromes.first = stol(prevHalf + '9' + reversedPrevHalf);
-      else
-        palindromes.first = stol(prevHalf + reversedPrevHalf);
-    }
-
-    if (candidate > num)
-      palindromes.second = candidate;
-    else {
-      const string& nextHalf = to_string(stol(half) + 1);
-      const string& reversedNextHalf = reversed(nextHalf.substr(0, n / 2));
-      palindromes.second = stol(nextHalf + reversedNextHalf);
-    }
-
-    return palindromes;
-  }
-
-  string reversed(const string& s) {
-    return {s.rbegin(), s.rend()};
-  }
+   int mid=(digits+1)/2;
+   long prefix=stol(n.substr(0,mid));
+   //Case 3
+   vector<long>v={prefix,prefix+1,prefix-1};
+   for(long i:v)
+   {
+       string postfix=to_string(i);
+       if(digits%2!=0) postfix.pop_back();//// If the total length is odd number, pop the middle number in postfix
+       reverse(postfix.begin(),postfix.end());
+       string c=to_string(i)+postfix;
+       candidates.push_back(stol(c));
+   }
+   long mindiff=LONG_MAX;long result;long num=stol(n);
+   for(int i=0;i<5;i++)
+   {
+       if(candidates[i]!=num&&abs(candidates[i]-num)<mindiff)//Candidate must not be the same number and abs diff is minm
+       {
+           mindiff=abs(candidates[i]-num);
+           result=candidates[i];
+       }
+       else if(abs(candidates[i]-num)==mindiff) result=min(result,candidates[i]);
+   }
+    return to_string(result);
+}
 };
