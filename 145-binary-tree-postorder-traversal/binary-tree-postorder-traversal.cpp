@@ -10,24 +10,18 @@
  * };
  */
 class Solution {
- public:
-  vector<int> postorderTraversal(TreeNode* root) {
-    if (root == nullptr)
-      return {};
-
-    vector<int> ans;
-    stack<TreeNode*> stack{{root}};
-
-    while (!stack.empty()) {
-      root = stack.top(), stack.pop();
-      ans.push_back(root->val);
-      if (root->left)
-        stack.push(root->left);
-      if (root->right)
-        stack.push(root->right);
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> res;
+        postorder(root, res);
+        return res;
     }
 
-    ranges::reverse(ans);
-    return ans;
-  }
+private:
+    void postorder(TreeNode* root, vector<int>& res) {
+        if (!root) return;
+        postorder(root->left, res);
+        postorder(root->right, res);
+        res.push_back(root->val);
+    }
 };
