@@ -1,37 +1,30 @@
 class Solution {
- public:
-  double maxProbability(int n, vector<vector<int>>& edges,
-                        vector<double>& succProb, int start, int end) {
-    // {a: [(b, probability_ab)]}
-    vector<vector<pair<int, double>>> graph(n);
-    // (the probability to reach u, u)
-    priority_queue<pair<double, int>> maxHeap;
-    maxHeap.emplace(1.0, start);
-    vector<bool> seen(n);
-
-    for (int i = 0; i < edges.size(); ++i) {
-      const int u = edges[i][0];
-      const int v = edges[i][1];
-      const double prob = succProb[i];
-      graph[u].emplace_back(v, prob);
-      graph[v].emplace_back(u, prob);
+public:
+    double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
+        vector<pair<int,double>>adj[n];
+        for(int i=0;i<edges.size();i++){
+            adj[edges[i][0]].push_back({edges[i][1],succProb[i]});
+            adj[edges[i][1]].push_back({edges[i][0],succProb[i]});
+        }
+        priority_queue<pair<double,int>>pq; 
+        pq.push({1.0,start}); 
+        vector<double>dist(n,INT_MIN);
+        dist[start]=1;
+        while(!pq.empty()){
+            auto itr=pq.top();
+            pq.pop();
+            double dis=itr.first;
+            int node=itr.second;
+            for(auto it:adj[node]){
+                int adjNode=it.first;
+                double edW=it.second;
+                if(dist[adjNode]<dis*edW){ 
+                    dist[adjNode]=dis*edW;
+                    pq.push({dist[adjNode],adjNode});
+                }
+            }
+        }        
+        if(dist[end]==INT_MIN) return 0.00000; 
+        else return dist[end];
     }
-
-    while (!maxHeap.empty()) {
-      const auto [prob, u] = maxHeap.top();
-      maxHeap.pop();
-      if (u == end)
-        return prob;
-      if (seen[u])
-        continue;
-      seen[u] = true;
-      for (const auto& [nextNode, edgeProb] : graph[u]) {
-        if (seen[nextNode])
-          continue;
-        maxHeap.emplace(prob * edgeProb, nextNode);
-      }
-    }
-
-    return 0;
-  }
 };
