@@ -1,18 +1,25 @@
 class Solution {
- public:
-  int mySqrt(int x) {
-    unsigned l = 1;
-    unsigned r = x + 1u;
+public:
+    int mySqrt(int x) {
 
-    while (l < r) {
-      const unsigned m = (l + r) / 2;
-      if (m > x / m)
-        r = m;
-      else
-        l = m + 1;
+        int low = 1;
+        int high = x;
+
+        while(low <= high){
+            long long mid = low + (high - low) / 2;
+            long long val = (mid * mid);
+            if(val <= x){
+                low = mid + 1;
+            }
+
+            else {
+                high = mid - 1;
+            }
+        }
+
+        return high;
+
+
+        
     }
-
-    // l: smallest number s.t. l * l > x
-    return l - 1;
-  }
 };
