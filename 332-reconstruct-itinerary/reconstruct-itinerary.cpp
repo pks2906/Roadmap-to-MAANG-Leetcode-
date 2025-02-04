@@ -1,25 +1,30 @@
 class Solution {
- public:
-  vector<string> findItinerary(vector<vector<string>>& tickets) {
-    vector<string> ans;
-    unordered_map<string, multiset<string>> graph;
+public:
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        // Build the graph
+        unordered_map<string, map<string, int>> graph;
+        for (const auto& ticket : tickets) {
+            graph[ticket[0]][ticket[1]]++;
+        }
 
-    for (const vector<string>& ticket : tickets)
-      graph[ticket[0]].insert(ticket[1]);
-
-    dfs(graph, "JFK", ans);
-    reverse(ans.begin(), ans.end());
-    return ans;
-  }
-
- private:
-  void dfs(unordered_map<string, multiset<string>>& graph, const string& u,
-           vector<string>& ans) {
-    while (graph.count(u) && !graph[u].empty()) {
-      const string v = *graph[u].begin();
-      graph[u].erase(graph[u].begin());
-      dfs(graph, v, ans);
+        vector<string> itinerary;
+        dfs("JFK", graph, itinerary);
+        reverse(itinerary.begin(), itinerary.end());
+        return itinerary;
     }
-    ans.push_back(u);
-  }
+
+private:
+    void dfs(const string& airport,
+             unordered_map<string, map<string, int>>& graph,
+             vector<string>& itinerary) {
+        auto& destinations = graph[airport];
+        while (!destinations.empty()) {
+            auto next = destinations.begin()->first;
+            if (--destinations[next] == 0) {
+                destinations.erase(next);
+            }
+            dfs(next, graph, itinerary);
+        }
+        itinerary.push_back(airport);
+    }
 };
