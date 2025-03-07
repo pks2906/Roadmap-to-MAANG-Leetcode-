@@ -1,19 +1,26 @@
 class Solution {
 public:
-    int height(TreeNode* root) {
-        if (!root) return 0;
-
-        int leftHeight = height(root->left);
-        int rightHeight = height(root->right);
-
-        if (leftHeight == -1 || rightHeight == -1) return -1;
-        
-        if (abs(leftHeight - rightHeight) > 1) return -1;
-
-        return 1 + max(leftHeight, rightHeight);
+    bool isBalanced(TreeNode *root) {
+  
+        return dfsHeight(root) != -1;
     }
 
-    bool isBalanced(TreeNode* root) {
-        return height(root) != -1;
+private:
+    int dfsHeight(TreeNode *root) {
+ 
+        if (root == nullptr) return 0;
+
+        int leftHeight = dfsHeight(root->left);
+     
+        if (leftHeight == -1) return -1;
+
+        int rightHeight = dfsHeight(root->right);
+    
+        if (rightHeight == -1) return -1;
+
+        if (std::abs(leftHeight - rightHeight) > 1) return -1;
+
+        return std::max(leftHeight, rightHeight) + 1;
     }
 };
+
